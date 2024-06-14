@@ -11,4 +11,5 @@ export const TAX_VENUE_SHADOW = '_gatherpress_venue';
 export const GPOOV_CLASS_NAME   = 'gp-onlineevent-or-venue';
 
 // export const VARIATION_OF = 'core/post-terms';
+export const VARIATION_OF = 'core/button';
 

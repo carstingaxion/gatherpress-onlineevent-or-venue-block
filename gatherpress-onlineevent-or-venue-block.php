@@ -50,8 +50,7 @@ function bootstrap(): void {
 	//
 	// Prevent block rendering if no 'online-event' term exists.
 	add_filter( 'pre_render_block', __NAMESPACE__ . '\\pre_render_button_block', 11, 2 );
-	// 
-	add_filter( 'render_block_core/button', __NAMESPACE__ . '\\render_button_block', 10, 3 );
+		add_filter( 'render_block_core/button', __NAMESPACE__ . '\\render_button_block', 10, 3 );
 	
 	// add_filter( 'hooked_block_types', __NAMESPACE__ . '\\hook_block_into_pattern', 10, 4 );
 	
@@ -62,7 +61,6 @@ function bootstrap(): void {
 	 * ATTENTION
 	 * 
 	 * This includes BREAKING CHANGES, because permalinks may change and must be reset.
-	 * 
 	 */
 	\add_filter(
 		'register_' . 'gatherpress_event' . '_post_type_args',
@@ -73,7 +71,8 @@ function bootstrap(): void {
 			$args['rewrite']['slug'] = prepare_rewrite_argument( $args['labels']['singular_name'] );
 			
 			return $args;
-		}, 11
+		},
+		11
 	);
 	\add_filter(
 		'register_' . 'gatherpress_venue' . '_post_type_args',
@@ -84,7 +83,8 @@ function bootstrap(): void {
 			$args['rewrite']['slug'] = prepare_rewrite_argument( $args['labels']['singular_name'] );
 	
 			return $args;
-		}, 11
+		},
+		11
 	);
 	\add_filter(
 		'register_' . '_gatherpress_venue' . '_taxonomy_args',
@@ -139,7 +139,7 @@ function bootstrap(): void {
 bootstrap();
 
 
-function prepare_rewrite_argument( string $rewrite_suggest ) : string {
+function prepare_rewrite_argument( string $rewrite_suggest ): string {
 	return strtolower( sanitize_title_with_dashes( $rewrite_suggest ) );
 }
 
@@ -163,7 +163,7 @@ function get_rewrite_argument( bool $with_venue_archives, $rewrite_argument ): s
 	// same slug as post type with an underscore prefixed
 	$venue_post_type = get_post_type_object( 'gatherpress_venue' );
 	if ( isset( $venue_post_type->rewrite['slug'] ) ) {
-		$slug = '_' . $venue_post_type->rewrite['slug'];
+		$slug                     = '_' . $venue_post_type->rewrite['slug'];
 		$rewrite_argument['slug'] = $slug;
 		return $rewrite_argument;
 	}
@@ -267,11 +267,11 @@ function register_asset( string $asset ): void {
 
 	// $index_css = "build/$asset/$asset.css";
 	// \wp_register_style(
-	// 	"gatherpress-onlineevent-or-venue--$asset",
-	// 	plugins_url( $index_css, __FILE__ ),
-	// 	[ 'wp-block-post-date','global-styles' ],
-	// 	time(),
-	// 	'screen'
+	// "gatherpress-onlineevent-or-venue--$asset",
+	// plugins_url( $index_css, __FILE__ ),
+	// [ 'wp-block-post-date','global-styles' ],
+	// time(),
+	// 'screen'
 	// );
 	wp_set_script_translations(
 		"gatherpress-onlineevent-or-venue--$asset",
@@ -320,39 +320,41 @@ function pre_render_button_block( $pre_render, $parsed_block ) {
 	if ( isset( $parsed_block['attrs']['className'] ) && false !== \strpos( $parsed_block['attrs']['className'], 'gp-onlineevent-or-venue-button' ) ) {
 
 		// error_log( \var_export(
-		// 	// $pre_render = '<pre>' . \var_export(
-		// 	[
-		// 		__FUNCTION__,
-		// 		get_post()->ID,
-		// 		// $parsed_block['attrs'],
-		// 		// $parsed_block['attrs']['className'],
-		// 		// $instance->context,
-		// 		// get_post( $instance->context['postId'] ),
-		// 		// \get_post_meta( 
-		// 		// $instance->context['postId'],
-		// 		// 'venue_information_website',
-		// 		// true
-		// 		// ),
-		// 	],
-		// 	true 
-		// 	)
+		// $pre_render = '<pre>' . \var_export(
+		// [
+		// __FUNCTION__,
+		// get_post()->ID,
+		// $parsed_block['attrs'],
+		// $parsed_block['attrs']['className'],
+		// $instance->context,
+		// get_post( $instance->context['postId'] ),
+		// \get_post_meta( 
+		// $instance->context['postId'],
+		// 'venue_information_website',
+		// true
+		// ),
+		// ],
+		// true 
+		// )
 		// );
 		// ) . '</pre>' . $pre_render;
 
+
 		// Will short-circuit if no 'online-event' term exists.
 		if ( ! \has_term( 'online-event', '_gatherpress_venue', get_post()->ID ) ) {
+			
 			return false; // And do not render the block at all.
 
-			// 	// Can still be a real venue.
-			// 	// Maybe show the website of the venue here ???
-			// 	return '';
+			// Can still be a real venue.
+			// Maybe show the website of the venue here ???
+			// return '';
 		}
 
 
-		// DEBUG
-		$on_off = ( 1 === rand( 1, 2 ) ) ? '__return_true' : '__return_false';
-		\add_filter( 'gatherpress_force_online_event_link', $on_off );
-		// \add_filter( 'gatherpress_force_online_event_link', '__return_true' );
+		// // DEMO & DEBUG ONLY !!!
+		// $on_off = ( 1 === rand( 1, 2 ) ) ? '__return_true' : '__return_false';
+		// \add_filter( 'gatherpress_force_online_event_link', $on_off );
+		// // \add_filter( 'gatherpress_force_online_event_link', '__return_true' );
 	}
 
 	return $pre_render;
@@ -388,10 +390,9 @@ function render_button_block( $block_content, $block, $instance ) {
 			$button->remove_attribute( 'href' );
 			// Return modified HTML.
 			$block_content = $button->get_updated_html();
-		}
-
+		}   
 	}
-	// DEMO & DEBUG ONLY !!!
+	// // // DEMO & DEBUG ONLY !!!
 	\remove_all_filters( 'gatherpress_force_online_event_link' );
 	
 	// $block_content = '<pre>' . \var_export( 
@@ -509,26 +510,36 @@ function modify_hooked_block_in_pattern( $parsed_hooked_block, $hooked_block_typ
  */
 function get_block_binding_values( $source_args, $block_instance ) {
 	// If no key or user ID argument is set, bail early.
-	if ( ! isset( $source_args['key'] )  || ! isset( $block_instance->parsed_block['attrs']['className'] ) ) {
+	if ( ! isset( $source_args['key'] ) || ! isset( $block_instance->parsed_block['attrs']['className'] ) ) {
 		return null;
 	}
 	if ( 'gatherpress_event' !== $block_instance->context['postType'] ) {
 		return null;
 	}
+	// DEMO & DEBUG ONLY !!!
+	$on_off = ( 1 === rand( 1, 2 ) ) ? '__return_true' : '__return_false';
+	\add_filter( 'gatherpress_force_online_event_link', $on_off );
+	// \add_filter( 'gatherpress_force_online_event_link', '__return_true' );
+
 	// Get the post ID from context.
 	$post_id           = $block_instance->context['postId'];
 	$gatherpress_event = new Event( $post_id );
 	$url               = $gatherpress_event->maybe_get_online_event_link();
 
+	// DEMO & DEBUG ONLY !!!
+	// \remove_all_filters( 'gatherpress_force_online_event_link' );
+	
 	// error_log( \var_export(
-	// 	// $pre_render = '<pre>' . \var_export(
-	// 	[
-	// 		// $block_instance->parsed_block['attrs'],
-	// 		$block_instance,
-	// 	],
-	// 	true 
-	// 	)
+	// $pre_render = '<pre>' . \var_export(
+	// [
+	// $block_instance->parsed_block['attrs'],
+	// $block_instance,
+	// ],
+	// true 
+	// )
 	// );
+
+	$url_shorten = $block_instance->parsed_block['attrs']['urlShorten'] ?: 20;
 
 	// Return the data based on the key argument.
 	switch ( $source_args['key'] ) {
@@ -536,7 +547,7 @@ function get_block_binding_values( $source_args, $block_instance ) {
 			return ( $url ) ? $url : '';
 		case 'text':
 			// Show a shortened version of the URL or 'null', which resets the 'text' to what is coming from the editor.
-			return ( $url ) ? sprintf( '%s', \url_shorten( $url, 20 ) ) : null;
+			return ( $url ) ? sprintf( '%s', \url_shorten( $url, $url_shorten ) ) : null;
 		default:
 			return null;
 	}

@@ -6,12 +6,17 @@ import { __ } from '@wordpress/i18n';
 
 import { postCategories, button } from '@wordpress/icons';
 
+import { addFilter } from "@wordpress/hooks";
+
 
 /**
  * Internal dependencies
 */
-import { TAX_VENUE_SHADOW, GPOOV_CLASS_NAME } from './helpers/namespace';
+import { TAX_VENUE_SHADOW, GPOOV_CLASS_NAME, VARIATION_OF } from './helpers/namespace';
 import GPQLIcon from './components/icon';
+
+
+import { onlineEventButtonEdit } from './edit';
 
 
 /**
@@ -78,12 +83,13 @@ const GPOOV_BUTTON_ATTRIBUTES = {
 				}
 			}
 		}
-	}
+	},
+	urlShorten: 20
 };
 
 
 /*  */
-registerBlockVariation( 'core/button', {
+registerBlockVariation( VARIATION_OF, {
 	...GPOOV_VARIATION_ATTRIBUTES,
 	name: GPOOV_CLASS_NAME + '-button',
 	isActive: [ 'className', 'metadata.bindings.url.source' ],
@@ -117,7 +123,7 @@ registerBlockVariation( 'core/buttons', {
 	// isActive: [ 'namespace', 'title' ], // This is not used/disabled by purpose.
 	innerBlocks: [
 		[
-			'core/button',
+			VARIATION_OF,
 			{
 				...GPOOV_BUTTON_ATTRIBUTES
 			},
@@ -127,7 +133,7 @@ registerBlockVariation( 'core/buttons', {
 	example: {
 		innerBlocks: [
 			{
-				name: 'core/button',
+				name: VARIATION_OF,
 				attributes: {
 					...GPOOV_BUTTON_ATTRIBUTES
 				}
@@ -139,45 +145,48 @@ registerBlockVariation( 'core/buttons', {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/* 
+/**
+ * Add the edit component to the block.
+ * This is the component that will be rendered in the editor.
+ * It will be rendered after the original block edit component.
+ *
+ * @param {function} BlockEdit Original component
+ * @returns {function} Wrapped component
+ *
+ * @see https://developer.wordpress.org/block-editor/developers/filters/block-filters/#editor-blockedit
+ */
 addFilter(
-    'blocks.registerBlockType',
-    'gatherpress/extend-paragraph-block',
-    extendParagraphBlock
+	'editor.BlockEdit',
+	'gatherpress-onlineevent-or-venue/button-block-variation',
+	onlineEventButtonEdit,
+	1
 );
 
-function extendParagraphBlock(settings, name) {
-    if (name !== 'core/post-terms') {
+
+
+
+
+
+
+addFilter(
+    'blocks.registerBlockType',
+	'gatherpress-onlineevent-or-venue/extend-button-block',
+    extendButtonBlock
+);
+
+function extendButtonBlock(settings, name) {
+    if (name !== VARIATION_OF) {
         return settings;
     }
-	// console.log(name);
-	// console.info(settings);
-	
-	settings.usesContext.indexOf('postId') === -1 && settings.usesContext.push('postId');
-	settings.usesContext.indexOf('postType') === -1 && settings.usesContext.push('postType');
-	
+
 	const newSettings = {
         ...settings,
+		attributes: {
+			...settings.attributes,
+			urlShorten: { 
+				type: 'integer',
+			},
+		},
         supports: {
             ...settings.supports,
 			className: false, // Removes "Additional CSS classes" panel for blocks that support it
@@ -186,4 +195,4 @@ function extendParagraphBlock(settings, name) {
     }
 	// console.log(newSettings);
 	return newSettings;
-} */
+}
