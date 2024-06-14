@@ -50,7 +50,6 @@ function bootstrap(): void {
 	//
 	// Prevent block rendering if no 'online-event' term exists.
 	add_filter( 'pre_render_block', __NAMESPACE__ . '\\pre_render_button_block', 11, 2 );
-		add_filter( 'render_block_core/button', __NAMESPACE__ . '\\render_button_block', 10, 3 );
 	
 	// add_filter( 'hooked_block_types', __NAMESPACE__ . '\\hook_block_into_pattern', 10, 4 );
 	
@@ -105,7 +104,7 @@ function bootstrap(): void {
 			 *    Has only one physical venue, maybe online-events
 			 *    => Does not need Event-Archives per Venue.
 			 *
-			 * 2. Patricias Chire
+			 * 2. Patricias Choir
 			 *    Has multiple venues
 			 *    => Could benefit from Event-Archives per Venue.
 			 *
@@ -319,42 +318,19 @@ function render_post_terms_block( $block_content, $block, $instance ) {
 function pre_render_button_block( $pre_render, $parsed_block ) {
 	if ( isset( $parsed_block['attrs']['className'] ) && false !== \strpos( $parsed_block['attrs']['className'], 'gp-onlineevent-or-venue-button' ) ) {
 
-		// error_log( \var_export(
-		// $pre_render = '<pre>' . \var_export(
-		// [
-		// __FUNCTION__,
-		// get_post()->ID,
-		// $parsed_block['attrs'],
-		// $parsed_block['attrs']['className'],
-		// $instance->context,
-		// get_post( $instance->context['postId'] ),
-		// \get_post_meta( 
-		// $instance->context['postId'],
-		// 'venue_information_website',
-		// true
-		// ),
-		// ],
-		// true 
-		// )
-		// );
-		// ) . '</pre>' . $pre_render;
-
-
 		// Will short-circuit if no 'online-event' term exists.
 		if ( ! \has_term( 'online-event', '_gatherpress_venue', get_post()->ID ) ) {
 			
 			return false; // And do not render the block at all.
 
+			// @TODO
 			// Can still be a real venue.
 			// Maybe show the website of the venue here ???
 			// return '';
 		}
 
-
-		// // DEMO & DEBUG ONLY !!!
-		// $on_off = ( 1 === rand( 1, 2 ) ) ? '__return_true' : '__return_false';
-		// \add_filter( 'gatherpress_force_online_event_link', $on_off );
-		// // \add_filter( 'gatherpress_force_online_event_link', '__return_true' );
+		// Enable modifications to the block.
+		add_filter( 'render_block_core/button', __NAMESPACE__ . '\\render_button_block', 10, 3 );
 	}
 
 	return $pre_render;
@@ -382,7 +358,7 @@ function render_button_block( $block_content, $block, $instance ) {
 		if ( $button->next_tag( 'a' ) ) {
 			// Inform the user with a spinning cursor and a waiting message.
 			$button->set_attribute( 'style', 'cursor:wait;' . $button->get_attribute( 'style' ) );
-			$button->set_attribute( 'title', 'Link is visible to attendees only. (CHANGES BY RANDOM FOR THE DEMO)' );
+			$button->set_attribute( 'title', __( 'Link is visible to attendees only.', 'gatherpress' ) . '(CHANGES BY RANDOM FOR THE DEMO)' );
 			// Allow for styling with CSS.
 			$button->add_class( 'gp-onlineevent-or-venue-button__disabled' );
 			// Prevent click & focus,
@@ -394,21 +370,6 @@ function render_button_block( $block_content, $block, $instance ) {
 	}
 	// // // DEMO & DEBUG ONLY !!!
 	\remove_all_filters( 'gatherpress_force_online_event_link' );
-	
-	// $block_content = '<pre>' . \var_export( 
-	// [
-	// // $block['attrs'],
-	// // $instance->context,
-	// // get_post( $instance->context['postId'] ),
-	// // \get_post_meta( 
-	// // \has_term( 'online-event', '_gatherpress_venue', $instance->context['postId'] ),
-	// $instance->context['postId'],
-	// // 'venue_information_website',
-	// // true
-	// // ),
-	// ],
-	// true 
-	// ) . '</pre>' . $block_content;
 
 	return $block_content;
 }
@@ -519,7 +480,6 @@ function get_block_binding_values( $source_args, $block_instance ) {
 	// DEMO & DEBUG ONLY !!!
 	$on_off = ( 1 === rand( 1, 2 ) ) ? '__return_true' : '__return_false';
 	\add_filter( 'gatherpress_force_online_event_link', $on_off );
-	// \add_filter( 'gatherpress_force_online_event_link', '__return_true' );
 
 	// Get the post ID from context.
 	$post_id           = $block_instance->context['postId'];
