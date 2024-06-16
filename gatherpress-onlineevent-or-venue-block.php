@@ -328,6 +328,9 @@ function pre_render_button_block( $pre_render, $parsed_block ) {
 			// Maybe show the website of the venue here ???
 			// return '';
 		}
+		// DEMO & DEBUG ONLY !!!
+		$on_off = ( 1 === rand( 1, 2 ) ) ? '__return_true' : '__return_false';
+		\add_filter( 'gatherpress_force_online_event_link', $on_off );
 
 		// Enable modifications to the block.
 		add_filter( 'render_block_core/button', __NAMESPACE__ . '\\render_button_block', 10, 3 );
@@ -477,9 +480,9 @@ function get_block_binding_values( $source_args, $block_instance ) {
 	if ( 'gatherpress_event' !== $block_instance->context['postType'] ) {
 		return null;
 	}
-	// DEMO & DEBUG ONLY !!!
-	$on_off = ( 1 === rand( 1, 2 ) ) ? '__return_true' : '__return_false';
-	\add_filter( 'gatherpress_force_online_event_link', $on_off );
+	// // DEMO & DEBUG ONLY !!!
+	// $on_off = ( 1 === rand( 1, 2 ) ) ? '__return_true' : '__return_false';
+	// \add_filter( 'gatherpress_force_online_event_link', $on_off );
 
 	// Get the post ID from context.
 	$post_id           = $block_instance->context['postId'];
