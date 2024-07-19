@@ -52,7 +52,8 @@ const onlineEventButtonEdit = createHigherOrderComponent( ( BlockEdit ) => {
 		const [meta, setMeta] = useEntityProp(
 			'postType',
 			// post.type,
-			'gatherpress_event',
+			// 'gatherpress_event',
+			PT_EVENT,
 			'meta',
 			// post.id
 			cId
