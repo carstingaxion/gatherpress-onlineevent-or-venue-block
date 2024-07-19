@@ -502,13 +502,13 @@ function get_block_binding_values( $source_args, $block_instance ) {
 	// )
 	// );
 
-	$url_shorten = $block_instance->parsed_block['attrs']['urlShorten'] ?: 20;
-
+	
 	// Return the data based on the key argument.
 	switch ( $source_args['key'] ) {
 		case 'url':
 			return ( $url ) ? $url : '';
 		case 'text':
+			$url_shorten = ( isset( $block_instance->parsed_block['attrs'], $block_instance->parsed_block['attrs']['urlShorten'] ) ) ? $block_instance->parsed_block['attrs']['urlShorten'] : 20;
 			// Show a shortened version of the URL or 'null', which resets the 'text' to what is coming from the editor.
 			return ( $url ) ? sprintf( '%s', \url_shorten( $url, $url_shorten ) ) : null;
 		default:
