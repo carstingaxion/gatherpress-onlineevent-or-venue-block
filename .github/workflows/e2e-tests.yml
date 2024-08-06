@@ -1,36 +1,68 @@
 name: E2E Tests
+
 on:
     workflow_dispatch:
     pull_request:
+
+# Cancels all previous workflow runs for pull requests that have not completed.
+concurrency:
+  # The concurrency group contains the workflow name and the branch name for pull requests
+  # or the commit hash for any other events.
+  group: ${{ github.workflow }}-${{ github.event_name == 'pull_request' && github.head_ref || github.sha }}
+  cancel-in-progress: true
+
+
 jobs:
     e2e-tests:
+        runs-on: ubuntu-latest
         strategy:
             fail-fast: false
-            matrix:
-                wp-docker-image-tag: ['6.6.1-php8.3', '6.4.2-php8.2']
-        runs-on: ubuntu-22.04
+            # matrix:
+            #     node: ['14']
+
         steps:
-            - uses: actions/checkout@v3
-            - name: Setup test environment
-              run: |
-                  export "WP_DOCKER_IMAGE_TAG=${{ matrix.wp-docker-image-tag }}"
-                  docker compose up -d wordpress
-                  docker compose run --rm -u 33 wpcli wp core install \
-                      --url=localhost:9992 \
-                      --title="Test Site" \
-                      --admin_user=e2e \
-                      --admin_password=e2e \
-                      --admin_email=e2e@test-site.localhost
-                  docker compose run --rm -u 33 wpcli wp plugin install gatherpress
-                  docker compose run --rm e2e npm install
-            - name: Run the tests
-              run: docker compose run --rm e2e npm run test
-            - name: Retain failed test results
-              uses: actions/upload-artifact@v3
-              if: failure()
-              with:
-                  name: test-results-${{ matrix.wp-docker-image-tag }}
-                  path: test-results/
-            - name: Cleanup test environment
-              if: always()
-              run: docker compose down -v --remove-orphans
+        - name: Checkout
+            uses: actions/checkout@v4
+            with:
+            ref: ${{ github.ref }}
+        # - name: Setup environment to use the desired version of NodeJS
+        #     uses: actions/setup-node@38d90ce44d5275ad62cc48384b3d8a58c500bb5f # v2.2.2
+        #     with:
+        #     node-version: ${{ matrix.node }}
+        #     cache: npm
+
+        # - name: Installing NPM dependencies
+        #     run: |
+        #         npm install
+        - name: Setup Node
+            uses: actions/setup-node@v4
+            with:
+                node-version-file: '.nvmrc'
+                cache: npm
+
+        - name: Install dependencies
+            run: npm ci
+
+        - name: Build plugin
+            # - [Incorrect version number used when creating zip archive · Issue #92 · wp-cli/dist-archive-command](https://github.com/wp-cli/dist-archive-command/issues/92)
+            run: |
+            npm run build
+
+        - name: Install Playwright dependencies
+            run: |
+                npx playwright install chromium firefox webkit --with-deps
+
+        - name: Starting the WordPress Environment
+            run: |
+                npm run env:start
+
+        - name: Running the tests
+            run: |
+                npm run test
+
+        - name: Retain failed test results
+            uses: actions/upload-artifact@v3
+            if: failure()
+            with:
+                name: test-results-${{ github.ref }}
+                path: test-results/
