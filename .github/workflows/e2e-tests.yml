@@ -48,6 +48,11 @@ jobs:
                 npm run env:start
 
         - name: Running the tests
+          environment:
+              WP_AUTH_STORAGE: .auth/wordpress.json
+              WP_BASE_URL: http://localhost
+              WP_USERNAME: admin
+              WP_PASSWORD: password
           run: |
                 npm run test
 
@@ -55,5 +60,5 @@ jobs:
           uses: actions/upload-artifact@v3
           if: failure()
           with:
-            name: test-results-${{ github.ref }}
+            name: test-results-matrix-less-debugging
             path: test-results/
