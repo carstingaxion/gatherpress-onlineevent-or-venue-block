@@ -14,17 +14,17 @@ jobs:
             - name: Setup test environment
               run: |
                   export "WP_DOCKER_IMAGE_TAG=${{ matrix.wp-docker-image-tag }}"
-                  docker compose -f tests/e2e/js/docker-compose.yml up -d wordpress
-                  docker compose -f tests/e2e/js/docker-compose.yml run --rm -u 33 wpcli wp core install \
+                  docker compose up -d wordpress
+                  docker compose run --rm -u 33 wpcli wp core install \
                       --url=localhost:9992 \
                       --title="Test Site" \
                       --admin_user=e2e \
                       --admin_password=e2e \
                       --admin_email=e2e@test-site.localhost
-                  docker compose -f tests/e2e/js/docker-compose.yml run --rm -u 33 wpcli wp plugin install gatherpress
-                  docker compose -f tests/e2e/js/docker-compose.yml run --rm e2e npm install
+                  docker compose run --rm -u 33 wpcli wp plugin install gatherpress
+                  docker compose run --rm e2e npm install
             - name: Run the tests
-              run: docker compose -f tests/e2e/js/docker-compose.yml run --rm e2e npm run test
+              run: docker compose run --rm e2e npm run test
             - name: Retain failed test results
               uses: actions/upload-artifact@v3
               if: failure()
@@ -33,4 +33,4 @@ jobs:
                   path: test-results/
             - name: Cleanup test environment
               if: always()
-              run: docker compose -f tests/e2e/js/docker-compose.yml down -v --remove-orphans
+              run: docker compose down -v --remove-orphans
