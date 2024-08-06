@@ -29,26 +29,4 @@ test.describe(() => {
             'edit.php?post_type=gatherpress_event&page=gatherpress_general',
         );
     });
-
-/*     test('A custom message can be set on the settings page', async ({
-        page,
-        admin,
-        wpGatherPress,
-    }) => {
-        await wpGatherPress.deleteCustomMessage();
-
-        await admin.visitAdminPage('options-general.php?page=wpgov_wpgb');
-
-        const customMessageField = page.getByLabel('Top Bar Message');
-        const saveButton = page.getByRole('button', { name: 'Save Changes' });
-
-        await customMessageField.fill('Sic vita est!');
-        await saveButton.click();
-
-        // At this point, after the form submission, we are on a new page.
-        const successMessage = page.getByText('Settings saved');
-
-        await expect(successMessage).toBeVisible();
-        await expect(customMessageField).toHaveValue('Sic vita est!');
-    }); */
 });
