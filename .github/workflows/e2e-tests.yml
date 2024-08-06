@@ -14,7 +14,7 @@ jobs:
             - name: Setup test environment
               run: |
                   export "WP_DOCKER_IMAGE_TAG=${{ matrix.wp-docker-image-tag }}"
-                  docker compose up -d wordpress
+                  docker compose -f tests/e2e/js/docker-compose.yml up -d wordpress
                   docker compose run --rm -u 33 wpcli wp core install \
                       --url=localhost:9992 \
                       --title="Test Site" \
