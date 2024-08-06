@@ -50,7 +50,7 @@ jobs:
         - name: Running the tests
           env:
               WP_AUTH_STORAGE: .auth/wordpress.json
-              WP_BASE_URL: http://localhost
+              WP_BASE_URL: http://localhost:8888
               WP_USERNAME: admin
               WP_PASSWORD: password
           run: |
