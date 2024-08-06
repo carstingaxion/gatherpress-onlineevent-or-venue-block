@@ -48,7 +48,7 @@ jobs:
                 npm run env:start
 
         - name: Running the tests
-          environment:
+          env:
               WP_AUTH_STORAGE: .auth/wordpress.json
               WP_BASE_URL: http://localhost
               WP_USERNAME: admin
