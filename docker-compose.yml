@@ -33,7 +33,7 @@ services:
             timeout: 10s
             retries: 5
     e2e:
-        image: mcr.microsoft.com/playwright:v1.40.1-jammy
+        image: mcr.microsoft.com/playwright:v1.46.0-jammy
         environment:
             WP_AUTH_STORAGE: .auth/wordpress.json
             WP_BASE_URL: http://wordpress
