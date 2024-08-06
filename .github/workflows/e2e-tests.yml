@@ -7,7 +7,7 @@ jobs:
         strategy:
             fail-fast: false
             matrix:
-                wp-docker-image-tag: ['6.2.2-php8.0', '6.4.2-php8.2']
+                wp-docker-image-tag: ['6.6.1-php8.3', '6.4.2-php8.2']
         runs-on: ubuntu-22.04
         steps:
             - uses: actions/checkout@v3
