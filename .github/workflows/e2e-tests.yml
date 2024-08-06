@@ -54,7 +54,7 @@ jobs:
               WP_USERNAME: admin
               WP_PASSWORD: password
           run: |
-                npm run test
+                npm run test:e2e
 
         - name: Retain failed test results
           uses: actions/upload-artifact@v3
