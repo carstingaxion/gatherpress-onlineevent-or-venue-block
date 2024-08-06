@@ -13,7 +13,10 @@
 		"packages-update": "wp-scripts packages-update",
 		"plugin-zip": "wp-scripts plugin-zip",
 		"start": "wp-scripts start",
-		"test": "npx playwright test"
+		"test": "npx playwright test",
+		"env:start": "wp-env start",
+		"env:stop": "wp-env stop"
+
 	},
 	"files": [
 		"build",
@@ -23,6 +26,7 @@
 	"devDependencies": {
 		"@playwright/test": "^1.46.0",
 		"@wordpress/e2e-test-utils-playwright": "^1.4.0",
+		"@wordpress/env": "^10.4.0",
 		"@wordpress/icons": "*",
 		"@wordpress/scripts": "^28.0.0",
 		"classnames": "^2.5.1"
