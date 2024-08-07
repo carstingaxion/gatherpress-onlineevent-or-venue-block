@@ -161,13 +161,13 @@ function get_rewrite_argument( bool $with_venue_archives, $rewrite_argument ): s
 	// ok'ish version
 	// same slug as post type with an underscore prefixed
 	$venue_post_type = get_post_type_object( 'gatherpress_venue' );
-	if ( isset( $venue_post_type->rewrite['slug'] ) ) {
+	if ( $venue_post_type instanceof \WP_Post_Type && isset( $venue_post_type->rewrite['slug'] ) ) {
 		$slug                     = '_' . $venue_post_type->rewrite['slug'];
 		$rewrite_argument['slug'] = $slug;
 		return $rewrite_argument;
 	}
 	// fallback, can be trueish or false.
-	return $venue_post_type->rewrite;
+	return false;
 }
 
 
