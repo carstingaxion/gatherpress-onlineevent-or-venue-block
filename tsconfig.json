@@ -2,7 +2,7 @@
     "compilerOptions": {
         "baseUrl": ".",
         "paths": {
-            "@test-utils": ["tests/e2e/js/test-utils"]
+            "@test-utils": ["tests/e2e/test-utils"]
         }
     }
 }

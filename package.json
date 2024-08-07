@@ -14,8 +14,8 @@
 		"plugin-zip": "wp-scripts plugin-zip",
 		"start": "wp-scripts start",
 		"test": "npx playwright test",
-		"test:e2e": "wp-scripts test-playwright --config playwright.config.ts",
-		"test:e2e:debug": "wp-scripts test-playwright --config playwright.config.ts --ui",
+		"test:e2e": "wp-scripts test-playwright --config tests/e2e/playwright.config.ts",
+		"test:e2e:debug": "wp-scripts test-playwright --config tests/e2e/playwright.config.ts --ui",
 		"env:start": "wp-env start",
 		"env:stop": "wp-env stop"
 
