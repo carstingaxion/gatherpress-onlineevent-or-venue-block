@@ -1,8 +1,8 @@
-import { test, expect } from '@test-utils';
+import { test, expect, WP_AUTH_STORAGE } from '@test-utils';
 
 // We have multiple tests in this file, all requiring us to be authenticated.
 // Compare this to the front-end.spec.ts.
-test.use({ storageState: process.env.WP_AUTH_STORAGE });
+test.use({ storageState: WP_AUTH_STORAGE });
 
 test.beforeAll(async ({ requestUtils }) => {
     await requestUtils.activatePlugin('gatherpress');

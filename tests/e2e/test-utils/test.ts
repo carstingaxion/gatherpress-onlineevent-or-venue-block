@@ -8,6 +8,18 @@ import {
     RequestUtils,
 } from '@wordpress/e2e-test-utils-playwright';
 
+
+/**
+ * WordPress dependencies
+ */
+// const { WP_BASE_URL, WP_USERNAME, WP_PASSWORD } = require( '@wordpress/e2e-test-utils-playwright/config' );
+const {    
+    WP_USERNAME     = 'admin',
+    WP_PASSWORD     = 'password',
+    WP_BASE_URL     = 'http://localhost:8889',
+    WP_AUTH_STORAGE = 'artifacts/auth.json',
+} = process.env;
+
 // We could also import utils from other packages.
 // import { StoreApiUtils } from '@woocommerce/e2e-utils';
 
@@ -39,10 +51,10 @@ const test = base.extend<{
     async requestUtils({}, use) {
         // We want to make all REST API calls as authenticated users.
         const requestUtils = await RequestUtils.setup({
-            baseURL: process.env.WP_BASE_URL,
+            baseURL: WP_BASE_URL,
             user: {
-                username: process.env.WP_USERNAME,
-                password: process.env.WP_PASSWORD,
+                username: WP_USERNAME,
+                password: WP_PASSWORD,
             },
         });
 
@@ -53,4 +65,11 @@ const test = base.extend<{
     // },
 });
 
-export { test, expect };
+export {
+    test,
+    expect,
+    WP_USERNAME,
+    WP_PASSWORD,
+    WP_BASE_URL,
+    WP_AUTH_STORAGE,
+};
