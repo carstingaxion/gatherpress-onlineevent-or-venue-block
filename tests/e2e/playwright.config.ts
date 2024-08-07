@@ -3,9 +3,9 @@ import { defineConfig, devices } from '@playwright/test';
 export default defineConfig({
     // This directory holds all the test files.
     // https://playwright.dev/docs/test-configuration
-    testDir: 'tests/e2e/tests',
+    testDir: 'tests',
     // This is run before any tests. Check the file for more information.
-    globalSetup: 'tests/e2e/global-setup.ts',
+    globalSetup: 'global-setup.ts',
     use: {
         // It's simpler to use relative paths when referencing our application's URLs.
         // https://playwright.dev/docs/test-webserver#adding-a-baseurl
