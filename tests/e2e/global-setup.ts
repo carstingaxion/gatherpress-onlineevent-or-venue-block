@@ -1,8 +1,15 @@
+/**
+ * External dependencies
+ */
 import { request } from '@playwright/test';
-import { RequestUtils } from '@wordpress/e2e-test-utils-playwright';
 
 /**
  * WordPress dependencies
+ */
+import { RequestUtils } from '@wordpress/e2e-test-utils-playwright';
+
+/**
+ * Internal dependencies
  * 
  * @TODO: Would be nice to require() those constants directly from gutenberg, but they are not publicly exposed.
  */
@@ -29,6 +36,10 @@ export default async function globalSetup() {
     // Alternatively, we could take a more traditional route,
     // filling in the input fields for the username and password and submitting the form.
     // https://playwright.dev/docs/test-global-setup-teardown#example
+
+    // Authenticate and save the storageState to disk.
     await requestUtils.setupRest();
+
+    //
     await requestContext.dispose();
 }
