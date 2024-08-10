@@ -1,0 +1,64 @@
+name: E2E Tests
+
+on:
+    workflow_dispatch:
+    pull_request:
+
+# Cancels all previous workflow runs for pull requests that have not completed.
+concurrency:
+  # The concurrency group contains the workflow name and the branch name for pull requests
+  # or the commit hash for any other events.
+  group: ${{ github.workflow }}-${{ github.event_name == 'pull_request' && github.head_ref || github.sha }}
+  cancel-in-progress: true
+
+
+jobs:
+    e2e-tests:
+        runs-on: ubuntu-latest
+        strategy:
+            fail-fast: false
+            # matrix:
+            #     node: ['14']
+
+        steps:
+        - name: Checkout
+          uses: actions/checkout@v4
+          with:
+            ref: ${{ github.ref }}
+
+        - name: Setup Node
+          uses: actions/setup-node@v4
+          with:
+            node-version-file: '.nvmrc'
+            cache: npm
+
+        - name: Install dependencies
+          run: npm ci
+
+        - name: Build plugin
+          run: |
+            npm run build
+
+        - name: Install Playwright dependencies
+          run: |
+                npx playwright install chromium firefox webkit --with-deps
+
+        - name: Starting the WordPress Environment
+          run: |
+                npm run env:start
+
+        - name: Running the tests
+          env:
+              WP_AUTH_STORAGE: .auth/wordpress.json
+              WP_BASE_URL: http://localhost:8888
+              WP_USERNAME: admin
+              WP_PASSWORD: password
+          run: |
+                npm run test:e2e
+
+        - name: Retain failed test results
+          uses: actions/upload-artifact@v3
+          if: failure()
+          with:
+            name: test-results-matrix-less-debugging
+            path: test-results/
